@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,12 +15,19 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 10px;
 }
 
+/* normal pages */
 .reader img {
     width: 100%;
     max-width: 800px;
-    margin-bottom: 10px;
+    height: auto;
+}
+
+/* spreads (double-page pages) */
+.reader img.spread {
+    max-width: 1400px;
 }
 </style>
 </head>
@@ -29,12 +35,14 @@ body {
 <body>
 
 <div class="reader">
+
     <img src="page1.jpg">
     <img src="page2.jpg">
     <img src="page3.jpg">
-    <img src="page4.jpg">
+    <!-- DOUBLE PAGE SPREAD -->
+    <img src="page4.jpg" class="spread">
+
 </div>
 
 </body>
 </html>
-```
