@@ -1,0 +1,114 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Art</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0d0d0d;
+    color: #eee;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    background: black;
+    font-size: 28px;
+    letter-spacing: 2px;
+}
+
+/* SECTION TITLES */
+h2 {
+    margin: 30px 20px 10px;
+    font-weight: normal;
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
+}
+
+/* GALLERY */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+    padding: 20px;
+}
+
+.gallery img {
+    width: 100%;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.gallery img:hover {
+    transform: scale(1.05);
+}
+
+/* MANGA LIST */
+.manga-list {
+    padding: 20px;
+}
+
+.manga-item {
+    margin-bottom: 10px;
+}
+
+.manga-item a {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.manga-item a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+/* FOOTER */
+footer {
+    text-align: center;
+    padding: 15px;
+    font-size: 12px;
+    color: #666;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    Andres Villarosa
+</header>
+
+<!-- ILLUSTRATIONS -->
+<h2>Illustrations</h2>
+<div class="gallery">
+    <img src="art1.jpg">
+    <img src="art2.jpg">
+    <img src="art3.jpg">
+</div>
+
+<!-- MANGA -->
+<h2>One-Shots</h2>
+<div class="manga-list">
+
+    <div class="manga-item">
+        <a href="C:\Users\Dakilang Henyo\Desktop\Html website test\Tinolar_War.html">Tinola War</a>
+    </div>
+
+    <div class="manga-item">
+        <a href="manga2.html">One-shot #2 – Title Here</a>
+    </div>
+
+</div>
+
+<footer>
+    © 2026 Andres Villarosa
+</footer>
+
+</body>
+</html>
+```
