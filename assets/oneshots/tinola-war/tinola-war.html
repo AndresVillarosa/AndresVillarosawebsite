@@ -10,6 +10,19 @@ body {
     background: #000;
 }
 
+/* PAGE COUNTER */
+.page-counter {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    z-index: 1000;
+}
+
 /* container for vertical reading */
 .reader {
     display: flex;
@@ -25,7 +38,7 @@ body {
     height: auto;
 }
 
-/* spreads (double-page pages) */
+/* spreads */
 .reader img.spread {
     max-width: 1400px;
 }
@@ -34,15 +47,44 @@ body {
 
 <body>
 
+<!-- PAGE COUNTER -->
+<div class="page-counter" id="counter">1 / 1</div>
+
 <div class="reader">
 
     <img src="page1.jpg">
     <img src="page2.jpg">
     <img src="page3.jpg">
-    <!-- DOUBLE PAGE SPREAD -->
+
+    <!-- SPREAD -->
     <img src="page4.jpg" class="spread">
 
 </div>
+
+<script>
+const pages = document.querySelectorAll(".reader img");
+const counter = document.getElementById("counter");
+
+const total = pages.length;
+counter.textContent = `1 / ${total}`;
+
+function updatePage() {
+    let current = 1;
+
+    pages.forEach((img, index) => {
+        const rect = img.getBoundingClientRect();
+
+        // check if image is near center of screen
+        if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+            current = index + 1;
+        }
+    });
+
+    counter.textContent = `${current} / ${total}`;
+}
+
+window.addEventListener("scroll", updatePage);
+</script>
 
 </body>
 </html>
