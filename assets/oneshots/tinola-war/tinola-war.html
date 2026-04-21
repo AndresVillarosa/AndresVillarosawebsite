@@ -11,7 +11,25 @@ body {
     color: #fff;
     font-family: Arial;
 }
+/* PAGE WRAPPER */
+.page {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
 
+/* PAGE NUMBER */
+.page-num {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    font-size: 12px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    pointer-events: none;
+}
 /* PAGE COUNTER */
 .page-counter {
     position: fixed;
@@ -53,24 +71,89 @@ body {
 
 <div class="reader">
 
-    <img src="page001.jpg" data-pages="1" >
-    <img src="page002.jpg" data-pages="1" loading="lazy">
-    <img src="page003.jpg" data-pages="1" loading="lazy">
-    <!-- SPREAD (counts as 2 pages) -->
-    <img src="page004-005.jpg" class="spread" data-pages="2" loading="lazy">
-    <img src="page006.jpg" data-pages="1" loading="lazy">
-    <img src="page007.jpg" data-pages="1" loading="lazy">
-    <img src="page008.jpg" data-pages="1" loading="lazy">
-    <img src="page009.jpg" data-pages="1" loading="lazy">
-    <img src="page010.jpg" data-pages="1" loading="lazy">
-    <img src="page011.jpg" data-pages="1" loading="lazy">
-    <!-- SPREAD (counts as 2 pages) -->
-    <img src="page012-013.jpg" class="spread" data-pages="2" loading="lazy">
-    <img src="page014.jpg" data-pages="1" loading="lazy">
-    <!-- SPREAD (counts as 2 pages) -->
-    <img src="page015-016.jpg" class="spread" data-pages="2" loading="lazy">
-    <img src="page017.jpg" data-pages="1" loading="lazy">
+   <!-- PAGE 1 -->
+<div class="page">
+    <img src="page001.jpg">
+    <div class="page-num">1</div>
+</div>
 
+<!-- PAGE 2 -->
+<div class="page">
+    <img src="page002.jpg" loading="lazy">
+    <div class="page-num">2</div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page">
+    <img src="page003.jpg" loading="lazy">
+    <div class="page-num">3</div>
+</div>
+
+<!-- SPREAD (4–5) -->
+<div class="page">
+    <img src="page004-005.jpg" class="spread" loading="lazy">
+    <div class="page-num">4–5</div>
+</div>
+
+<!-- PAGE 6 -->
+<div class="page">
+    <img src="page006.jpg" loading="lazy">
+    <div class="page-num">6</div>
+</div>
+
+<!-- PAGE 7 -->
+<div class="page">
+    <img src="page007.jpg" loading="lazy">
+    <div class="page-num">7</div>
+</div>
+
+<!-- PAGE 8 -->
+<div class="page">
+    <img src="page008.jpg" loading="lazy">
+    <div class="page-num">8</div>
+</div>
+
+<!-- PAGE 9 -->
+<div class="page">
+    <img src="page009.jpg" loading="lazy">
+    <div class="page-num">9</div>
+</div>
+
+<!-- PAGE 10 -->
+<div class="page">
+    <img src="page010.jpg" loading="lazy">
+    <div class="page-num">10</div>
+</div>
+
+<!-- PAGE 11 -->
+<div class="page">
+    <img src="page011.jpg" loading="lazy">
+    <div class="page-num">11</div>
+</div>
+
+<!-- SPREAD (12–13) -->
+<div class="page">
+    <img src="page012-013.jpg" class="spread" loading="lazy">
+    <div class="page-num">12–13</div>
+</div>
+
+<!-- PAGE 14 -->
+<div class="page">
+    <img src="page014.jpg" loading="lazy">
+    <div class="page-num">14</div>
+</div>
+
+<!-- SPREAD (15–16) -->
+<div class="page">
+    <img src="page015-016.jpg" class="spread" loading="lazy">
+    <div class="page-num">15–16</div>
+</div>
+
+<!-- PAGE 17 -->
+<div class="page">
+    <img src="page017.jpg" loading="lazy">
+    <div class="page-num">17</div>
+</div>
 </div>
 
 <script>
