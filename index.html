@@ -18,6 +18,7 @@ header {
     padding: 20px;
     background: black;
     font-size: 28px;
+    letter-spacing: 2px;
 }
 
 /* SECTIONS */
@@ -40,6 +41,7 @@ h2 {
     color: #ccc;
     text-decoration: none;
     font-size: 18px;
+    cursor: pointer;
 }
 
 .manga-item a:hover {
@@ -59,14 +61,15 @@ h2 {
     border-radius: 8px;
     cursor: pointer;
     transition: 0.2s;
-    user-select: none;
 }
 
 .gallery img:hover {
     transform: scale(1.05);
 }
 
-/* LIGHTBOX */
+/* =========================
+   LIGHTBOX (IMAGES)
+========================= */
 .lightbox {
     position: fixed;
     inset: 0;
@@ -82,10 +85,9 @@ h2 {
     max-width: 90%;
     max-height: 90%;
     cursor: grab;
-    user-select: none;
 }
 
-/* ARROWS */
+/* arrows */
 .arrow {
     position: absolute;
     top: 50%;
@@ -96,7 +98,6 @@ h2 {
     border: none;
     cursor: pointer;
     padding: 10px 15px;
-    z-index: 1001;
 }
 
 .arrow.left { left: 20px; }
@@ -120,9 +121,71 @@ h2 {
     cursor: pointer;
 }
 
-/* LOCK SCROLL */
+/* =========================
+   MODAL (ONE SHOTS PREVIEW)
+========================= */
+.modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(10px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal {
+    width: 750px;
+    max-width: 90%;
+    background: #111;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    gap: 20px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+}
+
+.modal img {
+    width: 250px;
+    border-radius: 10px;
+}
+
+.modal h1 {
+    margin: 0;
+}
+
+.modal p {
+    color: #bbb;
+    line-height: 1.5;
+}
+
+.read-btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 15px;
+    background: white;
+    color: black;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+/* close click area */
+.close-area {
+    position: absolute;
+    inset: 0;
+}
+
+/* lock scroll */
 body.no-scroll {
     overflow: hidden;
+}
+
+/* RIGHT CLICK BLOCK */
+body {
+    -webkit-user-select: none;
+    user-select: none;
 }
 </style>
 </head>
@@ -136,16 +199,16 @@ body.no-scroll {
 <div class="manga-list">
 
     <div class="manga-item">
-        <a href="assets/oneshots/tinola-war/tinola-war.html">Tinola War</a>
+        <a onclick="openModal('tinola')">Tinola War</a>
     </div>
 
     <div class="manga-item">
-        <a href="manga2.html">One-shot #2 – Title Here</a>
+        <a onclick="openModal('manga2')">One-shot #2 – Title Here</a>
     </div>
 
 </div>
 
-<!-- GALLERY -->
+<!-- ILLUSTRATIONS -->
 <h2>Illustrations</h2>
 <div class="gallery">
     <img src="art1.jpg">
@@ -169,7 +232,81 @@ body.no-scroll {
     <button onclick="resetZoom()">Reset</button>
 </div>
 
+<!-- MODAL -->
+<div class="modal-bg" id="modalBg">
+
+    <div class="close-area" onclick="closeModal()"></div>
+
+    <div class="modal">
+
+        <img id="modalImg">
+
+        <div>
+            <h1 id="modalTitle"></h1>
+            <p id="modalDesc"></p>
+
+            <a id="readBtn" class="read-btn" target="_blank">Read</a>
+        </div>
+
+    </div>
+
+</div>
+
 <script>
+
+/* =========================
+   ONE SHOT DATA
+========================= */
+const data = {
+    tinola: {
+        img: "assets/oneshots/tinola-war/cover.jpg",
+        title: "Tinola War",
+        desc: "A chaotic war story where tinola becomes a weapon of survival and absurdity.",
+        link: "assets/oneshots/tinola-war/tinola-war.html"
+    },
+
+    manga2: {
+        img: "assets/oneshots/manga2/cover.jpg",
+        title: "One-shot #2",
+        desc: "Experimental story exploring memory, silence, and fractured reality.",
+        link: "manga2.html"
+    }
+};
+
+/* =========================
+   MODAL LOGIC
+========================= */
+const modalBg = document.getElementById("modalBg");
+const modalImg = document.getElementById("modalImg");
+const modalTitle = document.getElementById("modalTitle");
+const modalDesc = document.getElementById("modalDesc");
+const readBtn = document.getElementById("readBtn");
+
+function openModal(key) {
+    const item = data[key];
+
+    modalImg.src = item.img;
+    modalTitle.textContent = item.title;
+    modalDesc.textContent = item.desc;
+    readBtn.href = item.link;
+
+    modalBg.style.display = "flex";
+    document.body.classList.add("no-scroll");
+}
+
+function closeModal() {
+    modalBg.style.display = "none";
+    document.body.classList.remove("no-scroll");
+}
+
+/* ESC close */
+window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeModal();
+});
+
+/* =========================
+   LIGHTBOX SYSTEM
+========================= */
 const images = document.querySelectorAll(".gallery img");
 const lightbox = document.getElementById("lightbox");
 const img = document.getElementById("img");
@@ -179,18 +316,18 @@ const nextBtn = document.getElementById("next");
 
 let index = 0;
 
-/* ===== ZOOM / DRAG ===== */
+/* zoom/drag */
 let scale = 1;
 let x = 0, y = 0;
 let dragging = false;
 let startX, startY;
 
-/* ===== OPEN ===== */
+/* open image */
 images.forEach((el, i) => {
-    el.addEventListener("click", () => {
+    el.onclick = () => {
         index = i;
         open();
-    });
+    };
 });
 
 function open() {
@@ -201,22 +338,22 @@ function open() {
     resetZoom();
 }
 
-/* ===== CLOSE ===== */
-lightbox.addEventListener("click", (e) => {
-    if (e.target === lightbox) close();
-});
+/* close lightbox */
+lightbox.onclick = (e) => {
+    if (e.target === lightbox) closeLightbox();
+};
 
-function close() {
+function closeLightbox() {
     lightbox.style.display = "none";
     document.body.classList.remove("no-scroll");
 }
 
-/* ===== UPDATE ===== */
+/* update transform */
 function update() {
     img.style.transform = `scale(${scale}) translate(${x}px, ${y}px)`;
 }
 
-/* ===== ZOOM ===== */
+/* zoom */
 function zoomIn() {
     scale = Math.min(scale + 0.3, 5);
     update();
@@ -234,18 +371,16 @@ function resetZoom() {
     update();
 }
 
-/* ===== DRAG ===== */
+/* drag */
 img.addEventListener("mousedown", (e) => {
     dragging = true;
     startX = e.clientX - x;
     startY = e.clientY - y;
-    img.style.cursor = "grabbing";
     e.preventDefault();
 });
 
 window.addEventListener("mousemove", (e) => {
     if (!dragging) return;
-
     x = e.clientX - startX;
     y = e.clientY - startY;
     update();
@@ -253,42 +388,38 @@ window.addEventListener("mousemove", (e) => {
 
 window.addEventListener("mouseup", () => {
     dragging = false;
-    img.style.cursor = "grab";
 });
 
-/* ===== SCROLL ZOOM (no page scroll) ===== */
+/* scroll zoom */
 lightbox.addEventListener("wheel", (e) => {
     e.preventDefault();
-
     scale += e.deltaY * -0.001;
     scale = Math.min(Math.max(1, scale), 5);
     update();
 }, { passive: false });
 
-/* ===== ARROWS ===== */
-prevBtn.addEventListener("click", () => {
+/* arrows */
+prevBtn.onclick = () => {
     index = (index - 1 + images.length) % images.length;
     open();
-});
+};
 
-nextBtn.addEventListener("click", () => {
+nextBtn.onclick = () => {
     index = (index + 1) % images.length;
     open();
-});
+};
 
-/* ===== KEYBOARD ===== */
+/* keyboard */
 window.addEventListener("keydown", (e) => {
     if (lightbox.style.display !== "flex") return;
 
     if (e.key === "ArrowRight") nextBtn.click();
     if (e.key === "ArrowLeft") prevBtn.click();
-    if (e.key === "Escape") close();
 });
 
-/* ===== FULL RIGHT-CLICK BLOCK ===== */
-document.addEventListener("contextmenu", (e) => {
-    e.preventDefault();
-});
+/* RIGHT CLICK BLOCK */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
 </script>
 
 </body>
