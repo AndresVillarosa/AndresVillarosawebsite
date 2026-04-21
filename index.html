@@ -109,7 +109,7 @@ h2 {
     position: fixed;
     top: 20px;
     right: 20px;
-    display: flex;
+    display: none; /* 👈 IMPORTANT FIX */
     gap: 10px;
     z-index: 1000;
 }
@@ -196,6 +196,9 @@ body {
     <div class="manga-item">
         <a onclick="openModal('tinola')">Tinola War</a>
     </div>
+    <div class="manga-item">
+    <a onclick="openModal('newoneshot')">New One-Shot Name</a>
+    </div>
 
 </div>
 
@@ -253,7 +256,13 @@ const data = {
         title: "Tinola War",
         desc: "A chaotic war story where tinola becomes a weapon of survival and absurd logic.",
         link: "assets/oneshots/tinola-war/tinola-war.html"
-    }
+    },
+    newoneshot: {
+    img: "assets/oneshots/new-folder/cover.jpg",
+    title: "New One-Shot Name",
+    desc: "Short description of the story.",
+    link: "assets/oneshots/new-folder/newoneshot.html"
+}
 };
 
 /* =========================
@@ -327,6 +336,8 @@ function open() {
 
     img.src = images[index].src;
     resetZoom();
+
+    document.querySelector(".ui").style.display = "flex"; // 👈 SHOW
 }
 
 /* close */
@@ -337,6 +348,8 @@ lightbox.onclick = (e) => {
 function closeLightbox() {
     lightbox.style.display = "none";
     document.body.classList.remove("no-scroll");
+
+    document.querySelector(".ui").style.display = "none"; // 👈 HIDE
 }
 
 /* update */
