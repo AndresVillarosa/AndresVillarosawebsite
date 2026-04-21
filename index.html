@@ -18,13 +18,11 @@ header {
     padding: 20px;
     background: black;
     font-size: 28px;
-    letter-spacing: 2px;
 }
 
-/* SECTION TITLES */
+/* SECTIONS */
 h2 {
     margin: 30px 20px 10px;
-    font-weight: normal;
     border-bottom: 1px solid #333;
     padding-bottom: 5px;
 }
@@ -67,11 +65,11 @@ h2 {
     transform: scale(1.05);
 }
 
-/* LIGHTBOX (UPDATED ONLY) */
+/* LIGHTBOX BACKDROP */
 .lightbox {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.65);
     backdrop-filter: blur(12px);
     display: none;
     justify-content: center;
@@ -88,7 +86,24 @@ h2 {
     transition: transform 0.05s;
 }
 
-/* UI CONTROLS (kept) */
+/* ARROW BUTTONS */
+.arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 40px;
+    color: white;
+    background: rgba(0,0,0,0.4);
+    border: none;
+    cursor: pointer;
+    padding: 10px 15px;
+    z-index: 1001;
+}
+
+.arrow.left { left: 20px; }
+.arrow.right { right: 20px; }
+
+/* UI */
 .ui {
     position: fixed;
     top: 20px;
@@ -106,23 +121,18 @@ h2 {
     cursor: pointer;
 }
 
-/* FOOTER */
-footer {
-    text-align: center;
-    padding: 15px;
-    font-size: 12px;
-    color: #666;
+/* disable scroll when lightbox open */
+body.no-scroll {
+    overflow: hidden;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-    Andres Villarosa
-</header>
+<header>Andres Villarosa</header>
 
-<!-- ONE SHOTS (UNCHANGED) -->
+<!-- ONE SHOTS -->
 <h2>One-Shots</h2>
 <div class="manga-list">
 
@@ -136,7 +146,7 @@ footer {
 
 </div>
 
-<!-- ILLUSTRATIONS (UNCHANGED) -->
+<!-- GALLERY -->
 <h2>Illustrations</h2>
 <div class="gallery">
     <img src="art1.jpg">
@@ -146,55 +156,64 @@ footer {
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
+
+    <!-- arrows -->
+    <button class="arrow left" id="prev">‹</button>
+    <button class="arrow right" id="next">›</button>
+
     <img id="img">
 </div>
 
-<!-- CONTROLS -->
+<!-- UI -->
 <div class="ui">
     <button onclick="zoomIn()">+</button>
     <button onclick="zoomOut()">−</button>
     <button onclick="resetZoom()">Reset</button>
 </div>
 
-<footer>
-    © 2026 Andres Villarosa
-</footer>
-
 <script>
 const images = document.querySelectorAll(".gallery img");
 const lightbox = document.getElementById("lightbox");
 const img = document.getElementById("img");
 
+const prevBtn = document.getElementById("prev");
+const nextBtn = document.getElementById("next");
+
 let index = 0;
 
-/* ===== ZOOM + DRAG STATE ===== */
+/* ===== zoom / drag state ===== */
 let scale = 1;
 let x = 0, y = 0;
 let dragging = false;
 let startX, startY;
 
-/* ===== OPEN IMAGE ===== */
+/* ===== OPEN ===== */
 images.forEach((el, i) => {
     el.addEventListener("click", () => {
         index = i;
-        openImage();
+        open();
     });
 });
 
-function openImage() {
+function open() {
     lightbox.style.display = "flex";
+    document.body.classList.add("no-scroll");
+
     img.src = images[index].src;
     resetZoom();
 }
 
 /* ===== CLOSE ===== */
 lightbox.addEventListener("click", (e) => {
-    if (e.target === lightbox) {
-        lightbox.style.display = "none";
-    }
+    if (e.target === lightbox) close();
 });
 
-/* ===== UPDATE TRANSFORM ===== */
+function close() {
+    lightbox.style.display = "none";
+    document.body.classList.remove("no-scroll");
+}
+
+/* ===== UPDATE ===== */
 function update() {
     img.style.transform = `scale(${scale}) translate(${x}px, ${y}px)`;
 }
@@ -217,12 +236,13 @@ function resetZoom() {
     update();
 }
 
-/* ===== HOLD + DRAG (FIXED) ===== */
+/* ===== FIXED DRAG (no accidental toggle feeling) ===== */
 img.addEventListener("mousedown", (e) => {
     dragging = true;
     startX = e.clientX - x;
     startY = e.clientY - y;
     img.style.cursor = "grabbing";
+    e.preventDefault();
 });
 
 window.addEventListener("mousemove", (e) => {
@@ -238,24 +258,37 @@ window.addEventListener("mouseup", () => {
     img.style.cursor = "grab";
 });
 
-/* ===== ARROW KEYS ===== */
+/* ===== SCROLL ZOOM (FIXED - no page scroll) ===== */
+lightbox.addEventListener("wheel", (e) => {
+    e.preventDefault();
+
+    scale += e.deltaY * -0.001;
+    scale = Math.min(Math.max(1, scale), 5);
+    update();
+}, { passive: false });
+
+/* ===== ARROWS (KEYBOARD) ===== */
 window.addEventListener("keydown", (e) => {
     if (lightbox.style.display !== "flex") return;
 
-    if (e.key === "ArrowRight") {
-        index = (index + 1) % images.length;
-        openImage();
-    }
-
-    if (e.key === "ArrowLeft") {
-        index = (index - 1 + images.length) % images.length;
-        openImage();
-    }
-
-    if (e.key === "Escape") {
-        lightbox.style.display = "none";
-    }
+    if (e.key === "ArrowRight") next();
+    if (e.key === "ArrowLeft") prev();
+    if (e.key === "Escape") close();
 });
+
+/* ===== ARROWS (CLICKABLE) ===== */
+prevBtn.addEventListener("click", prev);
+nextBtn.addEventListener("click", next);
+
+function prev() {
+    index = (index - 1 + images.length) % images.length;
+    open();
+}
+
+function next() {
+    index = (index + 1) % images.length;
+    open();
+}
 </script>
 
 </body>
