@@ -157,26 +157,31 @@ body {
 </div>
 
 <script>
-const images = document.querySelectorAll(".reader img");
+const pages = document.querySelectorAll(".page");
 const counter = document.getElementById("counter");
 
 /* =========================
-   PAGE COUNTER (spread-aware)
+   TOTAL PAGES (spread-aware)
 ========================= */
 let total = 0;
 
-images.forEach(img => {
+pages.forEach(page => {
+    const img = page.querySelector("img");
     total += parseInt(img.dataset.pages || 1);
 });
 
 counter.textContent = `1 / ${total}`;
 
+/* =========================
+   SCROLL PAGE TRACKING
+========================= */
 function updatePage() {
     let current = 1;
     let count = 0;
 
-    images.forEach(img => {
-        const rect = img.getBoundingClientRect();
+    pages.forEach(page => {
+        const img = page.querySelector("img");
+        const rect = page.getBoundingClientRect();
         const pageCount = parseInt(img.dataset.pages || 1);
 
         if (
@@ -196,17 +201,14 @@ window.addEventListener("scroll", updatePage);
 window.addEventListener("load", updatePage);
 
 /* =========================
-   HYBRID PRELOAD (NEXT 3 PAGES)
-   - scalable for 50+ pages
+   PRELOAD NEXT 3 PAGES
 ========================= */
+const pageImgs = document.querySelectorAll(".page img");
 
-const totalPages = total; // uses your dataset system
-
-// preload next 3 images after page 1
 for (let i = 1; i <= 3; i++) {
-    if (images[i]) {
+    if (pageImgs[i]) {
         const img = new Image();
-        img.src = images[i].getAttribute("src");
+        img.src = pageImgs[i].src;
     }
 }
 </script>
